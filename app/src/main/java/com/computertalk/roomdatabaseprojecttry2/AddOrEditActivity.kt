@@ -104,14 +104,16 @@ class AddOrEditActivity : AppCompatActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
-        if(requestCode == pickRequest && resultCode == Activity.RESULT_OK)
+        if(requestCode == pickRequest && resultCode == Activity.RESULT_OK) {
             imageUri = data!!.data!!
+            changeImage(imageUri!!)
+        }
     }
 
     private fun changeImage(data: Uri)
     {
         actv_aoe_user_img.setImageURI(data)
-        changeImage(imageUri!!)
+
     }
 
     private fun saveImage():String
