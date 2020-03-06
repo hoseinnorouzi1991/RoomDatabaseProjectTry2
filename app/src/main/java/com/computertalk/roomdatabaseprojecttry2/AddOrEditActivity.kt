@@ -14,7 +14,8 @@ class AddOrEditActivity : AppCompatActivity() {
 
     private var MODE_ADD = 1
     private var MODE_EDIT = 2
-    private var MODE = MODE_ADD
+    private var mode = MODE_ADD
+    private var id = 0
 
     lateinit var db : AppDatabase
 
@@ -27,8 +28,15 @@ class AddOrEditActivity : AppCompatActivity() {
 
         db = AppDatabase.getInstance(this)
 
-        MODE = intent.getIntExtra("mode",MODE_ADD)
-
+        //MODE = intent.getIntExtra("mode",MODE_ADD)
+        if(intent.getIntExtra("id",0)!=0) {
+            mode = MODE_ADD
+        }
+        else
+        {
+            MODE_EDIT
+            id = intent.getIntExtra("id",0)
+        }
         init()
         listeners()
     }
@@ -55,7 +63,7 @@ class AddOrEditActivity : AppCompatActivity() {
 
     private fun init()
     {
-        when (MODE){
+        when (mode){
             MODE_ADD -> {
                 actv_aoe_user_img.setImageResource(R.drawable.user)
                 actv_aoe_submit.text = "افزودن"
