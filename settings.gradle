@@ -1,0 +1,2 @@
+rootProject.name='RoomDatabaseProjectTry2'
+include ':app'
