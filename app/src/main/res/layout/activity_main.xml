@@ -26,17 +26,12 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
-        app:srcCompat="@drawable/user" />
+        app:srcCompat="@drawable/ic_add_black_24dp" />
 
-    
-    <TextView
-        android:textSize="20dp"
-        android:id="@+id/test2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="click Here"
-        android:textAlignment="center"
-        android:layout_gravity="center"
-        />
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/actv_main_rcy_user"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

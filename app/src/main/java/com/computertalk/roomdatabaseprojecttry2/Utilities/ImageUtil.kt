@@ -4,20 +4,21 @@ import android.content.Context
 import android.net.Uri
 import android.webkit.MimeTypeMap
 import java.io.ByteArrayOutputStream
+import java.io.File
+import java.io.FileOutputStream
 import java.lang.Exception
 import java.util.*
 
-object SaveImage {
+object ImageUtil {
 
     @Synchronized
-    fun saveImage(context: Context, data: Uri): String? {
+    fun saveFilePrivate(context: Context, data: Uri): String? {
 
         try {
-            val imageName = UUID.randomUUID().toString() + "." +  uriToExtension(context,data)
+            val imageName = UUID.randomUUID().toString() + "." + uriToExtension(context, data)
             context.openFileOutput(imageName, Context.MODE_PRIVATE).write(uriToBytes(context, data))
             return imageName
-        }catch (e: Exception)
-        {
+        } catch (e: Exception) {
             return null
         }
         /*val imageFile = File(path)
@@ -32,8 +33,25 @@ object SaveImage {
         return imageName*/
 
     }
-    fun uriToBytes(context: Context, data: Uri):ByteArray
+
+    @Synchronized
+    fun loadFilePrivate(context: Context,name:String) : File
     {
+        val image = File(context.cacheDir,name)
+
+        if(image.exists())
+        {
+            return image
+        }
+
+        val imageBytes = context.openFileInput(name).readBytes()
+        val fileOut:FileOutputStream = FileOutputStream(image)
+        fileOut.write(imageBytes)
+
+        return  image
+    }
+
+    fun uriToBytes(context: Context, data: Uri): ByteArray {
         val ist = context.contentResolver.openInputStream(data)
         val bOut = ByteArrayOutputStream()
 
@@ -42,11 +60,11 @@ object SaveImage {
         return bOut.toByteArray()
     }
 
-    fun uriToExtension(context: Context, data: Uri):String{
+    fun uriToExtension(context: Context, data: Uri): String {
         val cr = context.contentResolver
         val mime = MimeTypeMap.getSingleton()
 
         val extension = mime.getExtensionFromMimeType(cr.getType(data))
-        return (if(extension != null )  extension else  "")
+        return (if (extension != null) extension else "")
     }
 }

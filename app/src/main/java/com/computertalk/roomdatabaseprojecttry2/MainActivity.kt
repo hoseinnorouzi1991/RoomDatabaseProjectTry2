@@ -6,9 +6,13 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import androidx.recyclerview.widget.DefaultItemAnimator
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.computertalk.roomdatabaseprojecttry2.Adapters.MainAdapter
 import com.computertalk.roomdatabaseprojecttry2.RoomLayer.DB.AppDatabase
 import com.computertalk.roomdatabaseprojecttry2.RoomLayer.Entities.UserEntity
-import com.computertalk.roomdatabaseprojecttry2.Utilities.SaveImage
+import com.computertalk.roomdatabaseprojecttry2.Utilities.ImageUtil
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_main.*
 import java.lang.StringBuilder
@@ -26,7 +30,35 @@ class MainActivity : AppCompatActivity() {
         db = AppDatabase.getInstance(this)
 
         listeners()
+        viewIntializer()
 
+    }
+
+    private fun  viewIntializer()
+    {
+        recyclerInit()
+    }
+
+    private fun recyclerInit()
+    {
+        actv_main_rcy_user.itemAnimator = DefaultItemAnimator()
+        actv_main_rcy_user.layoutManager = LinearLayoutManager(this,RecyclerView.VERTICAL,false)
+
+        loadUsers()
+    }
+
+    private fun loadUsers()
+    {
+        val users  = getUsers()
+        val userAdapter = MainAdapter(this,users)
+
+        actv_main_rcy_user.adapter = userAdapter
+    }
+
+    private fun getUsers():List<UserEntity>
+    {
+       val users = db.users().getAll()
+        return users
     }
 
     private fun listeners() {
@@ -38,11 +70,11 @@ class MainActivity : AppCompatActivity() {
             openAddOrEdit()
             //advancedAddUser()
 
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                    .setAction("Action", null).show()
+//            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+//                    .setAction("Action", null).show()
         }
 
-        test2?.setOnClickListener {
+        /*test2?.setOnClickListener {
             val users = db.users().getAll()
             val builder: StringBuilder = StringBuilder()
             for (user in users) {
@@ -50,7 +82,7 @@ class MainActivity : AppCompatActivity() {
                 builder.append("\n")
             }
             test2.text = builder.toString()
-        }
+        }*/
     }
 
     fun advancedAddUser() {
@@ -66,7 +98,7 @@ class MainActivity : AppCompatActivity() {
         if (requestCode == pickRequest && resultCode == Activity.RESULT_OK) {
 
             val uImage = data!!.data!!
-            val saveImage = SaveImage.saveImage(this,uImage)
+            val saveImage = ImageUtil.saveFilePrivate(this,uImage)
 
             addUser("mohammad hosein norouzi",null,"09398299779",saveImage)
 //            addUser("mohammmad hosein norouzi",null,"09398299779",newImageName)
@@ -99,5 +131,10 @@ class MainActivity : AppCompatActivity() {
             R.id.action_settings -> true
             else -> super.onOptionsItemSelected(item)
         }
+    }
+
+    override fun onRestart() {
+        super.onRestart()
+        loadUsers()
     }
 }
